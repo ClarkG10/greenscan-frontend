@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="src/js/system/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>Dashboard</title>
+    <style>
+      .hidden-logo {
+        display: none !important;
+      }
+      .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg shadow-sm">
+      <div class="container-fluid">
+        <button
+          class="open-btn bg-white rounded-circle text-black"
+          id="sidebarToggle"
+          onclick="toggleSidebar()"
+          style="font-size: medium"
+        >
+          ☰
+        </button>
+        <div class="fw-bold text-white d-block navbarlogo">
+          <img src="src/imgs/letterlogo2.png" alt="" width="150px" />
+        </div>
+        <div class="btn-group">
+          <span
+            class="dropdown-toggle d-flex align-items-center justify-content-center text-white"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <div>
+              <img
+                src="src/imgs/logo2.png"
+                alt="Logo"
+                width="35px"
+                class="rounded-circle me-1"
+              />
+            </div>
+          </span>
+          <ul class="dropdown-menu dropdown-menu-end p-2">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li>
+              <button
+                id="btn_logout"
+                class="dropdown-item d-grid text-white rounded-2 py-2 mt-2"
+                style="background-color: #4f7942"
+              >
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar shadow-sm">
+      <span
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 20px;
+          border: none !important;
+        "
+      >
+        <div class="fw-bold text-white mt-2 sidebarlogo">
+          <img src="src/imgs/letterlogo4.png" alt="" width="150px" />
+        </div>
+      </span>
+      <a
+        class="mt-3 focus fw-bold d-flex align-items-center"
+        href="dashboard.html"
+      >
+        <img
+          src="src/icon/home (2).png"
+          class="me-2"
+          width="24px"
+          height="24px"
+        />
+        <span class="mt-1">Dashboard </span>
+      </a>
+      <a class="opacity d-flex align-items-center" href="trees.html">
+        <img src="src/icon/tree.png" class="me-2" width="20px" />
+        Trees
+      </a>
+      <a class="opacity d-flex align-items-center" href="history.html">
+        <img src="src/icon/file (1).png" class="me-2" width="20px" />
+        History
+      </a>
+      <a class="opacity d-flex align-items-center" href="user.html">
+        <img src="src/icon/users (3).png" class="me-2" width="20px" />
+        Users
+      </a>
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="content">
+      <div class="container">
+        <h4 class="fw-bold">Dashboard</h4>
+        <span>Welcome Back, Clark Raven Dalauta</span>
+        <div class="row mt-3">
+          <!-- Card 1: Total Trees -->
+          <div class="col-lg-4">
+            <div class="card p-3">
+              <p class="card-title fw-bold opacity-50">Total Trees</p>
+              <h5 class="card-text fw-bold">150</h5>
+            </div>
+
+            <!-- Card for Pie Chart -->
+            <div class="card p-3">
+              <div>
+                <p class="card-title fw-bold opacity-50">Tree Pie Chart</p>
+                <canvas id="treeChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Recently Added Trees -->
+          <div class="col-lg-4 d-flex">
+            <div class="card p-3">
+              <p class="card-title fw-bold opacity-50">Recently Added Trees</p>
+              <div
+                style="
+                  overflow-x: auto;
+                  overflow-y: hidden;
+                  font-size: 14px !important;
+                "
+              >
+                <table
+                  class="table table-hover table-responsive"
+                  style="width: 100%"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Common Name</th>
+                      <th scope="col">Scientific Name</th>
+                      <th scope="col">Family Name</th>
+                      <th scope="col">Added on</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="fw-bold">1</td>
+                      <td>Updated</td>
+                      <td>Admin John</td>
+                      <td>2024-10-11</td>
+                      <td>2024-10-11</td>
+                    </tr>
+                    <tr>
+                      <td class="fw-bold">2</td>
+                      <td>Deleted</td>
+                      <td>Admin Jane</td>
+                      <td>2024-10-09</td>
+                      <td>2024-10-11</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 d-flex">
+            <div class="card p-3 table-responsive" style="width: 100%">
+              <p class="card-title fw-bold opacity-50">Recent Activity</p>
+              <div
+                style="
+                  overflow-x: auto;
+                  overflow-y: hidden;
+                  font-size: 14px !important;
+                "
+              >
+                <table
+                  class="table table-hover table-responsive"
+                  style="width: 100%"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Tree</th>
+                      <th scope="col">Action</th>
+                      <th scope="col">User</th>
+                      <th scope="col">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="fw-bold">1</td>
+                      <td>Narra</td>
+                      <td>Updated</td>
+                      <td>Admin John</td>
+                      <td>2024-10-11</td>
+                    </tr>
+                    <tr>
+                      <td class="fw-bold">2</td>
+                      <td>Mango</td>
+                      <td>Deleted</td>
+                      <td>Admin Jane</td>
+                      <td>2024-10-09</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Set initial styles
+
+      function isSidebarOpen() {
+        let sidebarOpen = false;
+        console.log(window.innerWidth);
+        if (window.innerWidth > 768) {
+          sidebarOpen = true; // Initialize to true
+        }
+
+        return sidebarOpen;
+      }
+
+      let sidebarOpen = isSidebarOpen(); // Initialize to true
+      console.log(sidebarOpen);
+
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const navbarLogo = document.querySelector(".navbarlogo");
+      const sidebarLogo = document.querySelector(".sidebarlogo");
+      const navbar = document.querySelector(".navbar");
+
+      // Set initial styles
+      if (sidebarOpen) {
+        document.body.classList.add("sidebar-open");
+        navbar.style.marginLeft = "250px";
+        navbarLogo.classList.add("hidden-logo"); // Show logo when sidebar is open
+      }
+
+      function toggleSidebar() {
+        document.body.classList.toggle("sidebar-open");
+        sidebarOpen = !sidebarOpen;
+
+        // Toggle the 'hidden-logo' class to hide/show the logo
+        if (sidebarOpen) {
+          if (window.innerWidth > 768) {
+            navbar.style.marginLeft = "250px"; // Open sidebar
+            navbarLogo.classList.add("hidden-logo"); // Show logo when sidebar is open
+          }
+        } else {
+          navbar.style.marginLeft = "0"; // Close sidebar
+          navbarLogo.classList.remove("hidden-logo"); // Hide logo when sidebar is closed
+        }
+      }
+    </script>
+  </body>
+</html>

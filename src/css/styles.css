@@ -1,0 +1,293 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'League Spartan' !important;
+    background-color: #fffafa !important;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #4F7942 !important;
+}
+
+/* Custom sidebar */
+.sidebar {
+    height: 100%;
+    width: 250px;
+    /* Set the width of the sidebar */
+    position: fixed;
+    top: 0;
+    left: -250px;
+    /* Move sidebar off-screen by default */
+    background-color: white;
+    overflow-x: hidden;
+    transition: left 0.3s;
+    /* Smooth transition for opening */
+    z-index: 1000;
+    /* Ensure sidebar is below navbar */
+}
+
+.sidebar a {
+    padding: 10px 12px;
+    text-decoration: none;
+    font-size: 17px;
+    color: black;
+    display: flex;
+    transition: background-color 0.3s;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+}
+
+.opacity {
+    opacity: 50% !important;
+}
+
+.opacity:hover {
+    opacity: 100% !important;
+
+}
+
+.sidebar a:hover {
+    background-color: #f5f5f5;
+    color: #4F7942;
+    /* border-right: 5px solid #c2c5c1 !important; */
+    border-radius: 20px;
+    opacity: 100% !important;
+}
+
+.focus {
+    background-color: #f5f5f5;
+    color: #4F7942 !important;
+    border-radius: 20px;
+
+}
+
+/* Main content adjustment when sidebar is open */
+.sidebar-open .sidebar {
+    left: 0;
+    /* Slide in sidebar */
+}
+
+/* Adjustments for larger screens */
+.sidebar-open .content {
+    margin-left: 250px;
+    /* Shift content right on larger screens */
+    transition: margin-left 0.3s ease;
+}
+
+/* For tablet screens and below */
+@media (max-width: 768px) {
+    .sidebar-open .content {
+        display: block;
+        /* Ensure content is displayed */
+        margin-left: 0;
+        /* Reset margin when sidebar is open on small screens */
+    }
+
+    .sidebar {
+        width: 200px;
+        /* Adjust sidebar width for smaller screens */
+    }
+
+    .sidebar-open .navbar {
+        z-index: 1001;
+        /* Keep navbar above sidebar */
+    }
+
+    .md {
+        display: none !important;
+    }
+
+    .navbar {
+        font-size: 14px;
+    }
+
+    .open-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .table {
+        font-size: 14px !important;
+    }
+
+    .btn-secondary {
+        font-size: 14px !important;
+        width: 65px !important;
+        height: 30px !important;
+    }
+
+    .btn-danger {
+        font-size: 14px !important;
+        width: 40px !important;
+        height: 30px !important;
+    }
+}
+
+/* Main content styling */
+.content {
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #4F7942 !important;
+    padding: 10px;
+    z-index: 1;
+    /* Ensure navbar is above other content */
+    transition: margin-left 0.3s;
+    /* Smooth transition for navbar */
+}
+
+.open-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.open-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Stack columns on smaller screens */
+.row>[class*='col-'] {
+    margin-bottom: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 576px) {
+    .open-btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .sidebar {
+        width: 180px;
+        /* Adjust sidebar width for extra small screens */
+    }
+
+    .sm {
+        display: none !important;
+    }
+}
+
+/* Ensure that the chart card and recent activity table are responsive */
+.card {
+    margin-bottom: 20px;
+    width: 100%;
+    /* Make sure the card uses all available space */
+    max-width: 100%;
+    /* Prevent overflow */
+    border: none !important;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.btn {
+    height: 35px;
+}
+
+/* Make the chart responsive */
+canvas {
+    width: 100% !important;
+    /* Ensure the chart stretches to fill the card */
+    height: 300px;
+    /* Set a fixed height */
+}
+
+/* Ensure the row layout remains fluid */
+.row {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.active {
+    background-color: #4F7942 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.inactive {
+    color: #4F7942 !important;
+}
+
+.hidden-logo {
+    display: none !important;
+}
+
+.nav-item .nav-link {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.activeNav {
+    font-weight: bold !important;
+    border-bottom: 2px solid White;
+}
+
+.nonActiveNav:hover {
+    font-weight: bold !important;
+    border-bottom: 2px solid White;
+}
+
+.center {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+}
+
+/* Centering the container and making it responsive */
+.login-box {
+
+    max-width: 400px;
+    width: 100%;
+}
+
+@media (max-width: 576px) {
+    .login-box {
+        padding: 2rem;
+    }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    /* Ensures the logo image is responsive */
+}
+
+#qrcode-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Customizing the scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbcbcb;
+    /* Color of the scrollbar thumb */
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #7f7f7f;
+    /* Color of the scrollbar thumb on hover */
+}

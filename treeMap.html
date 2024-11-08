@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tree Map</title>
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+      #map {
+        height: 91svh;
+        width: 100%;
+      }
+
+      .hidden-logo {
+        display: none !important;
+      }
+
+      /* QR Code Reader Styles */
+      @media (min-width: 768px) {
+        .hideBottomNav {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .hideNav {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg shadow-sm">
+      <div class="container">
+        <div class="fw-bold text-white d-block navbarlogo">
+          <img src="src/imgs/letterlogo2.png" alt="Logo" width="150px" />
+        </div>
+        <ul class="nav justify-content-end">
+          <li class="nav-item me-3 nonActiveNav opacity hideNav">
+            <a class="nav-link" aria-current="page" href="index.html"
+              >Tree List</a
+            >
+          </li>
+          <li class="nav-item me-3 nonActiveNav opacity hideNav">
+            <a class="nav-link" aria-current="page" href="qrScan.html"
+              >Scan Tree</a
+            >
+          </li>
+          <li class="nav-item me-4 activeNav hideNav">
+            <a class="nav-link" href="treeMap.html">Map</a>
+          </li>
+          <li class="nav-item">
+            <button
+              type="button"
+              class="shadow-sm fw-bold"
+              style="
+                background-color: #4f7942;
+                border: 1px solid white;
+                border-radius: 10px;
+              "
+            >
+              <a class="nav-link" href="login.html">Login</a>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Bottom navbar -->
+    <nav
+      class="navbar fixed-bottom bg-white overflow-hidden hideBottomNav"
+      style="
+        box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+          rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+      "
+    >
+      <div class="container-fluid">
+        <div class="d-flex justify-content-around align-items-center w-100">
+          <div class="d-flex align-items-center opacity">
+            <a
+              class="navbar-brand text-center ms-3"
+              href="index.html"
+              style="color: #4f7942 !important"
+            >
+              <img
+                class="mb-1"
+                src="src/icon/tree.png"
+                alt=""
+                width="25px"
+              /><br />
+              <span class="fs-6 fs-md-5 fs-lg-4">Trees</span>
+            </a>
+          </div>
+          <div class="d-flex align-items-center opacity">
+            <a
+              class="navbar-brand text-center ms-3 fw-bold"
+              href="qrScan.html"
+              style="color: #4f7942 !important"
+              ><img
+                class="mb-1"
+                src="src/icon/qr-scan (1).png"
+                alt=""
+                width="25px"
+              /><br /><span class="fs-6 fs-md-5 fs-lg-4">Scan</span></a
+            >
+          </div>
+          <div
+            class="d-flex align-items-center"
+            style="padding: 8px 5px -2px 5px; background-color: white"
+          >
+            <a
+              class="navbar-brand text-center ms-3 fw-bold"
+              href="treeMap.html"
+              style="color: #4f7942 !important"
+            >
+              <img
+                class="mb-1"
+                src="src/icon/land-layer-location.png"
+                alt=""
+                width="25px"
+              /><br /><span class="fs-6 fs-md-5 fs-lg-4">Map</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="text-center">
+      <div id="map"></div>
+    </div>
+
+    <script type="module" src="src/js/system/treeMap.js"></script>
+  </body>
+</html>

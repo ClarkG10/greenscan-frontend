@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/css/styles.css" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=League Spartan"
+      rel="stylesheet"
+    />
+    <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="src/js/system/users.js"></script>
+
+    <title>Users</title>
+    <style>
+      .hidden-logo {
+        display: none !important;
+      }
+      .card {
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg shadow-sm">
+      <div class="container">
+        <button
+          class="open-btn bg-white rounded-circle text-black"
+          id="sidebarToggle"
+          onclick="toggleSidebar()"
+          style="font-size: medium"
+        >
+          ☰
+        </button>
+
+        <div class="fw-bold text-white d-block navbarlogo">
+          <img src="src/imgs/letterlogo2.png" alt="" width="150px" />
+        </div>
+        <div class="btn-group">
+          <span
+            class="dropdown-toggle d-flex align-items-center justify-content-center text-white"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <div>
+              <img
+                src="src/imgs/logo2.png"
+                alt="Logo"
+                width="35px"
+                class="rounded-circle me-1"
+              />
+            </div>
+          </span>
+          <ul class="dropdown-menu dropdown-menu-end p-2">
+            <li><a class="dropdown-item" href="#">Profile</a></li>
+            <li>
+              <button
+                id="btn_logout"
+                class="dropdown-item d-grid text-white rounded-2 py-2 mt-2"
+                style="background-color: #4f7942"
+              >
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar shadow-sm">
+      <span
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 20px;
+          border: none !important;
+        "
+      >
+        <div class="fw-bold text-white mt-2 sidebarlogo">
+          <img src="src/imgs/letterlogo4.png" alt="" width="150px" />
+        </div>
+      </span>
+      <a class="mt-3 opacity d-flex align-items-center" href="dashboard.html">
+        <img
+          src="src/icon/home (2).png"
+          class="me-2"
+          width="24px"
+          height="24px"
+        />
+        <span class="mt-1">Dashboard </span>
+      </a>
+      <a class="opacity d-flex align-items-center" href="trees.html">
+        <img src="src/icon/tree.png" class="me-2" width="20px" />
+        Trees
+      </a>
+      <a class="opacity d-flex align-items-center" href="history.html">
+        <img src="src/icon/file (1).png" class="me-2" width="20px" />
+        History
+      </a>
+      <a class="focus fw-bold d-flex align-items-center" href="user.html">
+        <img src="src/icon/users (3).png" class="me-2" width="20px" />
+        Users
+      </a>
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="content">
+      <div class="container">
+        <h4 class="fw-bold">User Management</h4>
+        <span>Manage User Account</span>
+
+        <div class="mb-3 mt-3 d-flex">
+          <input
+            type="text"
+            class="shadow-sm"
+            style="
+              width: 100%;
+              height: 45px;
+              margin-right: 10px;
+              border: none;
+              border-radius: 10px;
+              padding: 0px 0px 0px 20px;
+            "
+            name="keyword"
+            placeholder="Search for users"
+          />
+          <button
+            style="
+              border: none !important;
+              background-color: #4f7942;
+              color: white;
+              border-radius: 10px;
+              width: 80px;
+            "
+          >
+            Search
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card pt-3 px-3" style="height: 95%">
+              <div class="d-flex justify-content-between mb-3">
+                <span class="card-title fw-bold opacity-75"> Users </span>
+                <span id="createUserButton"> </span>
+              </div>
+              <div style="overflow-x: auto; overflow-y: hidden">
+                <table
+                  class="table table-hover table-responsive"
+                  style="width: 100%; margin-bottom: 35px"
+                >
+                  <thead>
+                    <tr>
+                      <th scope="col">Fullname</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Phone Number</th>
+                      <th scope="col">Office Location</th>
+                      <th scope="col">Department</th>
+                      <th scope="col">Office Hours</th>
+                      <th scope="col">Role</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="getUsers"></tbody>
+                </table>
+              </div>
+              <nav>
+                <ul class="pagination justify-content-end" id="pages"></ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="offcanvas offcanvas-end rounded-start-4"
+      data-bs-backdrop="static"
+      tabindex="-1"
+      id="staticBackdrop"
+      aria-labelledby="staticBackdropLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title fw-bold" id="staticBackdropLabel">
+          Create new user
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="floating-form">
+          <form id="user_form">
+            <!-- Fullname -->
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="fullname"
+                placeholder="Fullname"
+                name="fullname"
+                required
+              />
+              <label for="fullname">Fullname</label>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-floating mb-3">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Email Address"
+                name="email"
+                required
+              />
+              <label for="email">Email Address</label>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating mb-3">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Password"
+                name="password"
+                required
+              />
+              <label for="password">Password</label>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="economicUse"
+                placeholder="Phone Number"
+                name="phone_num"
+                required
+              />
+              <label for="phone_num">Phone Number</label>
+            </div>
+
+            <!-- Department -->
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="Department"
+                placeholder="Department"
+                name="department"
+                required
+              />
+              <label for="Department">Department</label>
+            </div>
+
+            <!-- Office Location -->
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                id="Office Location"
+                placeholder="Office Location"
+                name="office_location"
+                required
+              />
+              <label for="Office Location">Office Location</label>
+            </div>
+
+            <!-- Office Hours -->
+            <div class="form-floating mb-3">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Office Hours"
+                name="office_hours"
+                required
+              />
+              <label for="office_hours">Office Hours</label>
+            </div>
+
+            <!-- Office Hours -->
+            <div class="form-floating mb-3">
+              <input
+                type="file"
+                class="form-control"
+                placeholder="Profile Picture"
+                name="image_path"
+                accept="image/png/jpeg"
+              />
+              <label for="image">Profile Picture (optional)</label>
+            </div>
+
+            <!-- Role (Dropdown) -->
+            <div class="form-floating mb-3">
+              <select class="form-select" id="Role" name="role" required>
+                <option value="User" selected>User</option>
+                <option value="Admin">Admin</option>
+              </select>
+
+              <label for="Role">Role</label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+              <button
+                type="submit"
+                class="btn text-white"
+                style="background-color: #4f7942"
+              >
+                Create a new user
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Set initial styles
+      function isSidebarOpen() {
+        let sidebarOpen = false;
+        console.log(window.innerWidth);
+        if (window.innerWidth > 768) {
+          sidebarOpen = true; // Initialize to true
+        }
+
+        return sidebarOpen;
+      }
+
+      let sidebarOpen = isSidebarOpen(); // Initialize to true
+      console.log(sidebarOpen);
+
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const navbarLogo = document.querySelector(".navbarlogo");
+      const sidebarLogo = document.querySelector(".sidebarlogo");
+      const navbar = document.querySelector(".navbar");
+
+      // Set initial styles
+      if (sidebarOpen) {
+        document.body.classList.add("sidebar-open");
+        navbar.style.marginLeft = "250px";
+        navbarLogo.classList.add("hidden-logo"); // Show logo when sidebar is open
+      }
+
+      function toggleSidebar() {
+        document.body.classList.toggle("sidebar-open");
+        sidebarOpen = !sidebarOpen;
+
+        // Toggle the 'hidden-logo' class to hide/show the logo
+        if (sidebarOpen) {
+          if (window.innerWidth > 768) {
+            navbar.style.marginLeft = "250px"; // Open sidebar
+            navbarLogo.classList.add("hidden-logo"); // Show logo when sidebar is open
+          }
+        } else {
+          navbar.style.marginLeft = "0"; // Close sidebar
+          navbarLogo.classList.remove("hidden-logo"); // Hide logo when sidebar is closed
+        }
+      }
+    </script>
+  </body>
+</html>
