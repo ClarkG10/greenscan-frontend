@@ -25,6 +25,8 @@
     </style>
   </head>
   <body>
+    <div id="loader"></div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm">
       <div class="container-fluid">
@@ -121,7 +123,7 @@
           <div class="col-lg-4">
             <div class="card p-3">
               <p class="card-title fw-bold opacity-50">Total Trees</p>
-              <h5 class="card-text fw-bold">150</h5>
+              <div id="getTotalTrees"></div>
             </div>
 
             <!-- Card for Pie Chart -->
@@ -157,22 +159,7 @@
                       <th scope="col">Added on</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="fw-bold">1</td>
-                      <td>Updated</td>
-                      <td>Admin John</td>
-                      <td>2024-10-11</td>
-                      <td>2024-10-11</td>
-                    </tr>
-                    <tr>
-                      <td class="fw-bold">2</td>
-                      <td>Deleted</td>
-                      <td>Admin Jane</td>
-                      <td>2024-10-09</td>
-                      <td>2024-10-11</td>
-                    </tr>
-                  </tbody>
+                  <tbody id="recentlyAddedTrees"></tbody>
                 </table>
               </div>
             </div>
@@ -194,28 +181,13 @@
                   <thead>
                     <tr>
                       <th scope="col">ID</th>
-                      <th scope="col">Tree</th>
+                      <th scope="col">Scientific Name</th>
                       <th scope="col">Action</th>
                       <th scope="col">User</th>
                       <th scope="col">Date</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="fw-bold">1</td>
-                      <td>Narra</td>
-                      <td>Updated</td>
-                      <td>Admin John</td>
-                      <td>2024-10-11</td>
-                    </tr>
-                    <tr>
-                      <td class="fw-bold">2</td>
-                      <td>Mango</td>
-                      <td>Deleted</td>
-                      <td>Admin Jane</td>
-                      <td>2024-10-09</td>
-                    </tr>
-                  </tbody>
+                  <tbody id="recentActivity"></tbody>
                 </table>
               </div>
             </div>

@@ -3,6 +3,9 @@ import { backendURL, logout } from "../utils/utils.js";
 logout();
 getUserData();
 
+const loader = document.getElementById('loader');
+loader.innerHTML = `<div class="loader-overlay"><div class="loader"></div></div>`
+
 const userForm = document.getElementById("user_form");
 
 userForm.addEventListener("submit", async (e) => {
@@ -125,7 +128,10 @@ userForm.addEventListener("submit", async (e) => {
     }else{ 
         console.log("Fetching users failed: ", users.message);
     }
+
+    loader.innerHTML = ""; // Remove loader when data is fetched successfully
 }
+
 const pageAction = async (e) => {
   e.preventDefault();
   const url = e.target.getAttribute("data-url");

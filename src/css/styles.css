@@ -291,3 +291,50 @@ img {
     background: #7f7f7f;
     /* Color of the scrollbar thumb on hover */
 }
+
+/* Darken background overlay */
+.loader-overlay {
+    position: fixed;
+    /* Position fixed for full-screen overlay */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    /* Full viewport width */
+    height: 100vh;
+    /* Full viewport height */
+    background: rgba(0, 0, 0, 0.5);
+    /* Slightly darkened background */
+    display: flex;
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    z-index: 9999;
+    /* Ensure it overlays all other content */
+}
+
+/* Loader spinner */
+.loader {
+    border: 8px solid #f3f3f3;
+    /* Light outer border */
+    border-top: 8px solid #4F7942;
+    /* Colored top border for spin effect */
+    border-radius: 50%;
+    /* Make it circular */
+    width: 60px;
+    /* Size of loader */
+    height: 60px;
+    animation: spin 1s linear infinite;
+    /* Spinning animation */
+}
+
+/* Spin animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

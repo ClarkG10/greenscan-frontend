@@ -1,8 +1,11 @@
-import { backendURL, logout} from '../utils/utils.js'
+import { backendURL, logout, formatDate} from '../utils/utils.js'
 
 logout();
 
 getTreeHistory();
+
+const loader = document.getElementById('loader');
+loader.innerHTML = `<div class="loader-overlay"><div class="loader"></div></div>`
 // Fetch the tree history data
 async function getTreeHistory(url) {
     const getTreeHistory = document.getElementById('getTreeHistory');
@@ -115,6 +118,8 @@ async function getTreeHistory(url) {
         // Handle error
         console.error('History fetch failed:', historyData.message);
     }
+
+    loader.innerHTML = ""; // Remove loader when data is fetched successfully
 }
 
 const pageAction = async (e) => {
@@ -123,9 +128,3 @@ const pageAction = async (e) => {
     await getTreeHistory(url);
   }
 
-// Function to format the date
-function formatDate(dateString) {
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', options);
-}

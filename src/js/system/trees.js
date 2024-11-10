@@ -2,6 +2,9 @@ import { backendURL, logout } from "../utils/utils.js";
 
 logout();
 
+const loader = document.getElementById('loader');
+loader.innerHTML = `<div class="loader-overlay"><div class="loader"></div></div>`
+
 const PI = Math.PI;
 const treeForm = document.getElementById("createTree_form");
 
@@ -33,7 +36,7 @@ treeForm.addEventListener("submit", async (e) => {
     const DAB = calculateDAB(circumferenceAtBase);
     const treeHeight = calculateTreeHeight(distanceFromTree, angleOfElevation);
     const treeVolume = calculateTreeVolume(DBH, treeHeight);
-    const biomass = calculateBiomass(DBH, treeHeight);
+    const biomass = calculateBiomass(DBH);
     const carbonStored = calculateCarbonStored(biomass);
 
     console.log(circumferenceAtBase, DAB)
@@ -191,11 +194,11 @@ async function getTreeData(url) {
         updatetreeClick(e);
     }
 });
-
-
     }else{
         console.log(treeData.message);
     }
+
+    loader.innerHTML = ""; // Remove loader when data is fetched successfully
 }
 
 const pageAction = async (e) => {
@@ -233,29 +236,37 @@ const pageAction = async (e) => {
 
 
        // Get values from form inputs
-    const circumferenceAtBreastHeight = parseFloat(document.getElementById("circumferenceAtBreast_" + id).value);
-    const circumferenceAtBase = parseFloat(document.getElementById("circumferenceAtBase_" + id).value);
-    const distanceFromTree = parseFloat(document.getElementById("distanceFromTree_" + id).value);
-    const angleOfElevation = parseFloat(document.getElementById("angleOfElevation_" + id).value);
+    const circumferenceAtBreastHeight = parseFloat(document.getElementById("circumferenceAtBreast_" + id).value || 0);
+    const circumferenceAtBase = parseFloat(document.getElementById("circumferenceAtBase_" + id).value || 0);
+    const distanceFromTree = parseFloat(document.getElementById("distanceFromTree_" + id).value || 0);
+    const angleOfElevation = parseFloat(document.getElementById("angleOfElevation_" + id).value || 0);
 
-    // Perform calculations
-    const DBH = calculateDBH(circumferenceAtBreastHeight);
-    const DAB = calculateDAB(circumferenceAtBase);
-    const treeHeight = calculateTreeHeight(distanceFromTree, angleOfElevation);
-    const treeVolume = calculateTreeVolume(DBH, treeHeight);
-    const biomass = calculateBiomass(DBH, treeHeight);
-    const carbonStored = calculateCarbonStored(biomass);
-
-    console.log(circumferenceAtBase, DAB)
     // Create FormData from form and append calculated values
     const formData = new FormData(treeForm);
-    formData.append("dbh", DBH);
-    formData.append("dab", DAB);
-    formData.append("t_height", treeHeight);
-    formData.append("tree_volume", treeVolume);
-    formData.append("biomass", biomass);
-    formData.append("carbon_stored", carbonStored);
-  
+
+    // Perform calculations only if none of the required values are 0
+    if (circumferenceAtBreastHeight !== 0 && circumferenceAtBase !== 0 && distanceFromTree !== 0 && angleOfElevation !== 0) {
+      // Calculate DBH, DAB, tree height, volume, biomass, and carbon stored
+      const DBH = calculateDBH(circumferenceAtBreastHeight);
+      const DAB = calculateDAB(circumferenceAtBase);
+      const treeHeight = calculateTreeHeight(distanceFromTree, angleOfElevation);
+      const treeVolume = calculateTreeVolume(DBH, treeHeight);
+      const biomass = calculateBiomass(DBH);
+      const carbonStored = calculateCarbonStored(biomass);
+
+      // Append calculated values to formData
+      formData.append("dbh", DBH);
+      formData.append("dab", DAB);
+      formData.append("t_height", treeHeight);
+      formData.append("tree_volume", treeVolume);
+      formData.append("biomass", biomass);
+      formData.append("carbon_stored", carbonStored);
+    }
+    else {
+      // No data to update since one or more values are 0
+      console.log("Invalid input: One or more values are 0, no data will be updated.");
+    }
+
     formData.append("_method", "PUT");
   
       try {

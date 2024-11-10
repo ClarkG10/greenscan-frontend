@@ -25,4 +25,11 @@ async function logout(){
     }
 }
 
-export {backendURL, logout}
+// Function to format the date
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', options);
+}
+
+export {backendURL, logout, formatDate}

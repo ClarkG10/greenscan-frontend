@@ -25,12 +25,12 @@ async function fetchTrees() {
   if (treeResponse.ok) {
       let treeNumber = 1;
       let treeHtml = "";
-      const commonNameSet = new Set(); // To track unique common names
+      const scientificNameSet = new Set(); // To track unique scientific names
 
       trees.forEach((tree) => {
-        // Only add if common_name hasn't been added yet
-        if (!commonNameSet.has(tree.common_name)) {
-          commonNameSet.add(tree.common_name); // Add to the set
+        // Only add if scientific_name hasn't been added yet
+        if (!scientificNameSet.has(tree.scientific_name)) {
+          scientificNameSet.add(tree.scientific_name); // Add to the set
           treeHtml += `
       <div class="col-lg-4 col-md-6 col-sm-12" style="margin-top: -12px !important">
           <div type="button" class="p-3 rounded-3 shadow-sm border" style="border-right: 5px solid #4f7942 !important">
