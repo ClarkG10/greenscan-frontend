@@ -7,14 +7,15 @@ getTreeHistory();
 const loader = document.getElementById('loader');
 loader.innerHTML = `<div class="loader-overlay"><div class="loader"></div></div>`
 // Fetch the tree history data
-async function getTreeHistory(url) {
+async function getTreeHistory(url, keyword = "") {
     const getTreeHistory = document.getElementById('getTreeHistory');
 
-//     getTreeHistory.innerHTML = `<tr>${`<td><div class="spinner-border" role="status">
-//   <span class="visually-hidden">Loading...</span>
-// </div></td>`.repeat(7)}</tr>`;
+    let queryParams = 
+    "?" + 
+    (url ? new URL(url).searchParams + "&" : "") + 
+    (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
 
-    const historyResponse = await fetch(url || backendURL + '/api/history',{
+    const historyResponse = await fetch(url || backendURL + '/api/history' + queryParams,{
         headers:{
             Accept: 'application/json',
             Authorization: 'Bearer '+ localStorage.getItem('token'),
@@ -40,15 +41,11 @@ async function getTreeHistory(url) {
         let index = 0;
 
         historyData.data.forEach(history => {
-            console.log('History Item:', history); // Check the entire history object
             const userData = usersData.data.find(user => user?.id === history?.user_id);
             const newData = JSON.parse(history.new_data);
 
             // Format the created_at date
             const formattedDate = formatDate(history.created_at);
-            
-            // Check the old_data field
-            console.log('Old Data:', history.old_data);
             const oldData = history.old_data ? JSON.parse(history.old_data) : {};
 
             const newDataDisplay = `
@@ -120,6 +117,17 @@ async function getTreeHistory(url) {
     }
 
     loader.innerHTML = ""; // Remove loader when data is fetched successfully
+}
+
+const search_form = document.getElementById("search_form");
+search_form.onsubmit = async (e) => {
+    e.preventDefault(); 
+
+    const formData = new FormData(search_form); 
+    const keyword = formData.get("keyword");
+    console.log( keyword);
+
+    getTreeHistory("", keyword);
 }
 
 const pageAction = async (e) => {

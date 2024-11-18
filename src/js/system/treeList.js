@@ -3,10 +3,8 @@ import { backendURL } from "../utils/utils.js";
 fetchTrees();
 
 // Function to fetch trees
-async function fetchTrees() {
+async function fetchTrees(keyword = "") {
     const getTreeList = document.getElementById("getTreeList");
-
-    console.log(getTreeList);
 
     getTreeList.innerHTML = `
   <div class="text-center mt-3">
@@ -15,7 +13,12 @@ async function fetchTrees() {
     </div><br> Loading...
   </div>`;
 
-  const treeResponse = await fetch(backendURL + "/api/trees",{
+  let queryParams = 
+  "?" + 
+  (url ? new URL(url).searchParams + "&" : "") + 
+  (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
+
+  const treeResponse = await fetch(backendURL + "/api/trees" + queryParams,{
     headers: {
       Accept: "application/json",
     },
@@ -47,4 +50,15 @@ async function fetchTrees() {
     }else {
       alert(json.message);
     }
+}
+
+const search_form = document.getElementById("search_form");
+search_form.onsubmit = async (e) => {
+    e.preventDefault(); 
+
+    const formData = new FormData(search_form); 
+    const keyword = formData.get("keyword");
+    console.log( keyword);
+
+    getTreeList(keyword);
 }

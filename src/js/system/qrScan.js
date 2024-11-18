@@ -16,27 +16,37 @@ function onScanError(errorMessage) {
 }
 
 async function fetchTreeDetails(treeId) {
+  if (!treeId) {
+      console.error("Invalid tree ID received for fetching details.");
+      showToast("Invalid tree ID. Unable to fetch details.", false);
+      isScanning = false;
+      return;
+  }
 
-    const treeResponse = await fetch(backendURL + '/api/trees/' + treeId,
-        {
-            headers: {
-                Accept: "application/json",
-            },
-        })
+  try {
+      const treeResponse = await fetch(backendURL + '/api/trees/' + treeId, {
+          headers: {
+              Accept: "application/json",
+          },
+      });
 
-    const treeData = await treeResponse.json();
+      const treeData = await treeResponse.json();
 
-    if (treeResponse.ok) {
-        // Display tree details if found
-        displayTreeDetails(treeData);
-        showToast("Tree details fetched successfully!", true);
-        isScanning = true; // Allow scanning again
-        updateTreeLocation(treeId);
-    }else{
-        console.error("Error fetching tree details:", error);
-        showToast(error.message, false);
-        isScanning = false;
-    }
+      if (treeResponse.ok) {
+          displayTreeDetails(treeData);
+          showToast("Tree details fetched successfully!", true);
+          isScanning = true;
+          updateTreeLocation(treeId);
+      } else {
+          console.error("Error fetching tree details:", treeData);
+          showToast(treeData.message || "Error fetching tree details", false);
+          isScanning = false;
+      }
+  } catch (error) {
+      console.error("Fetch tree details error:", error);
+      showToast("Error connecting to the server.", false);
+      isScanning = false;
+  }
 }
 
 function getCurrentPositionPromise() {
@@ -46,42 +56,47 @@ function getCurrentPositionPromise() {
   }
   
   async function updateTreeLocation(treeId) {
-    // Check if geolocation is supported
-    if (!navigator.geolocation) {
-      console.error("Geolocation is not supported by this browser.");
-      showToast("Geolocation not supported", false);
-      return;
+    if (!treeId) {
+        console.error("Invalid tree ID for location update.");
+        showToast("Invalid tree ID. Unable to update location.", false);
+        return;
     }
-  
-      // Get the user's current geolocation
-      const position = await getCurrentPositionPromise();
 
-      // Make the API request to update the tree location
-      const treeLocationResponse = await fetch(backendURL + '/api/trees/updateLocation/' + treeId,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          }),
+    if (!navigator.geolocation) {
+        console.error("Geolocation is not supported by this browser.");
+        showToast("Geolocation not supported", false);
+        return;
+    }
+
+    try {
+        const position = await getCurrentPositionPromise();
+        const treeLocationResponse = await fetch(backendURL + '/api/trees/update-location/' + treeId, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            },
+            body: JSON.stringify({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                _method: "PUT",
+            }),
+        });
+
+        const treeData = await treeLocationResponse.json();
+
+        if (treeLocationResponse.ok) {
+            console.log("Tree location updated successfully:", treeData);
+            showToast("Tree location updated successfully!", true);
+        } else {
+            console.error("Error updating tree location:", treeData);
+            showToast(treeData.message || "Error updating tree location", false);
         }
-      );
-  
-      const treeData = await treeLocationResponse.json();
-  
-      // Check if the response was successful
-      if (treeLocationResponse.ok) {
-        console.log("Tree location updated successfully:", treeData);
-        showToast("Tree location updated successfully!", true);
-      } else {
-        console.error("Error updating tree location:", treeData);
-        showToast(treeData.message || "Error updating tree location", false);
-      }
-  }
+    } catch (error) {
+        console.error("Error updating tree location:", error);
+        showToast("Error connecting to the server.", false);
+    }
+}
 
 // Function to show the toast message
 function showToast(message, success = true) {

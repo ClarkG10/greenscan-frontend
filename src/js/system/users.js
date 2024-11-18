@@ -37,8 +37,15 @@ userForm.addEventListener("submit", async (e) => {
     document.querySelector("#user_form button").disabled = false;
     document.querySelector("#user_form button").innerHTML = `Create a new user`;
     })
-    async function getUserData(url) {
-      const userResponse = await fetch(url || backendURL + "/api/users", {
+
+async function getUserData(url, keyword = "") {
+
+    let queryParams = 
+    "?" + 
+    (url ? new URL(url).searchParams + "&" : "") + 
+    (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
+
+      const userResponse = await fetch(url || backendURL + "/api/users" + queryParams, {
           headers: {
               Accept: "application/json",
               Authorization: "Bearer " + localStorage.getItem("token"),
@@ -130,6 +137,17 @@ userForm.addEventListener("submit", async (e) => {
     }
 
     loader.innerHTML = ""; // Remove loader when data is fetched successfully
+}
+
+const search_form = document.getElementById("search_form");
+search_form.onsubmit = async (e) => {
+    e.preventDefault(); 
+
+    const formData = new FormData(search_form); 
+    const keyword = formData.get("keyword");
+    console.log( keyword);
+
+    getUserData("", keyword);
 }
 
 const pageAction = async (e) => {

@@ -106,10 +106,15 @@ function calculateCarbonStored(biomass) {
 
 
 getTreeData();
-async function getTreeData(url) {
+async function getTreeData(url, keyword = "") {
     const  getTreeData = document.getElementById("getTreeData");
 
-    const treeResponse = await fetch(url || backendURL + "/api/paginated/trees", {
+    let queryParams = 
+    "?" + 
+    (url ? new URL(url).searchParams + "&" : "") + 
+    (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
+
+    const treeResponse = await fetch(url || backendURL + "/api/paginated/trees" + queryParams, {
         headers: {
             Accept: "application/json",
             Authorization: "Bearer " + localStorage.getItem("token"),
@@ -199,6 +204,17 @@ async function getTreeData(url) {
     }
 
     loader.innerHTML = ""; // Remove loader when data is fetched successfully
+}
+
+const search_form = document.getElementById("search_form");
+search_form.onsubmit = async (e) => {
+    e.preventDefault(); 
+
+    const formData = new FormData(search_form); 
+    const keyword = formData.get("keyword");
+    console.log( keyword);
+
+    getTreeData("", keyword);
 }
 
 const pageAction = async (e) => {
