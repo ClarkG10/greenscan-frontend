@@ -4,7 +4,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: 'League Spartan' !important;
-    background-color: #fffafa !important;
+    background-color: #f8f8f8 !important;
 }
 
 /* Navbar */
@@ -55,14 +55,14 @@ body {
     background-color: #f5f5f5;
     color: #4F7942;
     /* border-right: 5px solid #c2c5c1 !important; */
-    border-radius: 20px;
+    border-radius: 10px;
     opacity: 100% !important;
 }
 
 .focus {
     background-color: #f5f5f5;
     color: #4F7942 !important;
-    border-radius: 20px;
+    border-radius: 10px;
 
 }
 

@@ -15,7 +15,7 @@ async function fetchTrees(keyword = "") {
 
   let queryParams = 
   "?" + 
-  (url ? new URL(url).searchParams + "&" : "") + 
+  // (url ? new URL(url).searchParams + "&" : "") + 
   (keyword ? "keyword=" + encodeURIComponent(keyword) + "&" : "");
 
   const treeResponse = await fetch(backendURL + "/api/trees" + queryParams,{
@@ -36,7 +36,7 @@ async function fetchTrees(keyword = "") {
           scientificNameSet.add(tree.scientific_name); // Add to the set
           treeHtml += `
       <div class="col-lg-4 col-md-6 col-sm-12" style="margin-top: -12px !important">
-          <div type="button" class="p-3 rounded-3 shadow-sm border" style="border-right: 5px solid #4f7942 !important">
+          <div type="button" class="p-3 rounded-3 shadow-sm border bg-white" style="border-right: 5px solid #4f7942 !important">
             <span class="fw-bold me-2">${treeNumber}</span>
             <span class="fw-bold">${tree.common_name}</span> - <span>${tree.scientific_name}</span> - <span>${tree.family_name}</span>
           </div>
@@ -60,5 +60,5 @@ search_form.onsubmit = async (e) => {
     const keyword = formData.get("keyword");
     console.log( keyword);
 
-    getTreeList(keyword);
+    fetchTrees(keyword);
 }

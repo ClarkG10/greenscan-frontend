@@ -118,7 +118,7 @@
       <div class="container">
         <h4 class="fw-bold">Dashboard</h4>
         <span>Welcome Back, Clark Raven Dalauta</span>
-        <div class="row mt-3">
+        <div class="row mt-3 d-flex">
           <!-- Card 1: Total Trees -->
           <div class="col-lg-4">
             <div class="card p-3">
@@ -127,7 +127,7 @@
             </div>
 
             <!-- Card for Pie Chart -->
-            <div class="card p-3">
+            <div class="card p-3" style="height: 445px !important">
               <div>
                 <p class="card-title fw-bold opacity-50">Tree Pie Chart</p>
                 <canvas id="treeChart"></canvas>
@@ -136,16 +136,20 @@
           </div>
 
           <!-- Card 2: Recently Added Trees -->
-          <div class="col-lg-4 d-flex">
-            <div class="card p-3">
+          <div class="col-lg-4">
+            <div class="mb-1">
               <p class="card-title fw-bold opacity-50">Recently Added Trees</p>
-              <div
-                style="
-                  overflow-x: auto;
-                  overflow-y: hidden;
-                  font-size: 14px !important;
-                "
-              >
+            </div>
+
+            <div
+              class="card p-3"
+              style="
+                height: 525px !important;
+                font-size: 14px !important;
+                overflow-y: auto;
+              "
+            >
+              <div>
                 <table
                   class="table table-hover table-responsive"
                   style="width: 100%"
@@ -164,16 +168,19 @@
               </div>
             </div>
           </div>
-          <div class="col-lg-4 d-flex">
-            <div class="card p-3 table-responsive" style="width: 100%">
+          <div class="col-lg-4">
+            <div class="mb-1">
               <p class="card-title fw-bold opacity-50">Recent Activity</p>
-              <div
-                style="
-                  overflow-x: auto;
-                  overflow-y: hidden;
-                  font-size: 14px !important;
-                "
-              >
+            </div>
+            <div
+              class="card p-3"
+              style="
+                height: 525px !important;
+                font-size: 14px !important;
+                overflow-y: auto;
+              "
+            >
+              <div>
                 <table
                   class="table table-hover table-responsive"
                   style="width: 100%"
