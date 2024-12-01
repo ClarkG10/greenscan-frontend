@@ -16,7 +16,13 @@
       src="https://unpkg.com/html5-qrcode"
       type="text/javascript"
     ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-ZLIPWC70d4HqdODaS1zopmod2YXUd94&map_ids=bbc70c6f1eb4afd9"></script>
     <style>
+      #map {
+        width: 100%;
+        height: 300px; /* Adjust as needed */
+      }
+
       .hidden-logo {
         display: none !important;
       }
@@ -161,8 +167,26 @@
     <!-- QR Code Scanner -->
     <div class="container">
       <div class="fw-bold text-center mt-4">
-        <h4 class="fw-bold">QR Code Scanner</h4>
+        <h4 class="fw-bold">Scan Qrcode</h4>
         <div id="reader" style="margin-top: 0"></div>
+        <div style="margin-top: -30px !important">Manually search</div>
+        <div class="d-flex justify-content-center">
+          <div
+            class="form-floating"
+            style="
+              width: 345px !important;
+              border: 1px solid #4f7942;
+              border-radius: 7px;
+            "
+          >
+            <select
+              class="form-select"
+              id="getAllTrees"
+              aria-label="Floating label select example"
+            ></select>
+            <label for="floatingSelect">Select Registered Trees</label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -189,10 +213,22 @@
     >
       <div class="modal-dialog mt-2">
         <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+          <div
+            class="modal-header"
+            style="background-color: #4f7942 !important"
+          >
+            <h1
+              class="modal-title fs-5 fw-bold text-white"
+              id="staticBackdropLabel"
+            >
               Tree Details
             </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body" id="tree-details"></div>
           <div>
@@ -206,7 +242,7 @@
                 style="background-color: #4f7942"
                 id="retakeButton"
               >
-                Scan Again
+                Scan
               </button>
             </div>
           </div>

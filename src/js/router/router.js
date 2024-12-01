@@ -11,7 +11,7 @@ function setRouter(){
         break;
         case "/dashboard.html":
         case "/trees.html":
-        case "/users.html":
+        case "/user.html":
         case "/history.html":
         if(localStorage.getItem("token") == null){
             window.location.pathname = "/index.html";

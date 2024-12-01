@@ -84,23 +84,19 @@ function addTreeMarker(map, tree) {
     lng: parseFloat(tree.longitude),
   };
 
-  // Get marker color based on the tree common name
-  const markerColor = getMarkerColor(tree.common_name);
+  // Get marker color based on the tree family name or any condition you prefer
+  const markerColor = getMarkerColor(tree.family_name); // e.g. #FF5733 for red
 
   const marker = new google.maps.Marker({
     position: position,
     map: map,
-    icon: {
-      url: `http://maps.google.com/mapfiles/ms/icons/${markerColor}-dot.png`,
-      scaledSize: new google.maps.Size(27, 29),
-      anchor: new google.maps.Point(20, 35),
-    },
+    icon: createCustomSVGIcon(markerColor), // Use custom SVG marker with hex color
   });
 
   const infoWindow = new google.maps.InfoWindow({
     content: `
-      <h5>${tree.tree_id}. ${tree.common_name}</h5>
-      <span><strong>Scientific Name:</strong> ${tree.scientific_name}</span>
+      <h6>${tree.common_name}</h6>
+      <span><i>${tree.scientific_name}</i></span>
       <p><strong>Family Name:</strong> ${tree.family_name || "N/A"}</p>
     `,
   });
@@ -110,18 +106,56 @@ function addTreeMarker(map, tree) {
   });
 }
 
-// Function to get the marker color based on the tree common name
-function getMarkerColor(commonName) {
+// Function to get the marker color based on the tree family name
+function getMarkerColor(familyName) {
+  if (!familyName || typeof familyName !== "string") {
+    console.warn("Invalid family name provided.");
+    return "#808080"; // Default to gray if no valid family name
+  }
+
   const colorMapping = {
-    acacia: "green",
-    mahogany: "red",
-    mango: "yellow",
-    narra: "blue",
-    oak: "orange",
-    pine: "purple",
-    birch: "pink",
-    maple: "brown",
+    fabaceae: "#4CAF50",      // Green
+    meliaceae: "#F44336",     // Red
+    anacardiaceae: "#FFEB3B", // Yellow
+    dipterocarpaceae: "#2196F3", // Blue
+    combretaceae: "#FF9800",  // Orange
+    lamiaceae: "#9C27B0",     // Purple
+    moraceae: "#E91E63",      // Pink
+    lythraceae: "#795548",    // Brown
+    myrtaceae: "#009688",     // Teal
+    sapindaceae: "#FF5722",   // Deep Orange
+    lauraceae: "#8BC34A",     // Light Green
+    casuarinaceae: "#607D8B", // Blue Grey
+    burseraceae: "#3F51B5",   // Indigo
+    phyllanthaceae: "#CDDC39", // Lime
+    rhizophoraceae: "#795548",// Brown
+    solanaceae: "#FF9800",    // Orange
+    rutaceae: "#FFEB3B",      // Yellow
+    rosaceae: "#F44336",      // Red
+    aceraceae: "#00BCD4",     // Cyan
+    apocynaceae: "#673AB7",   // Deep Purple
+    euphorbiaceae: "#00FF00", // Lime Green
+    malvaceae: "#8B0000",     // Dark Red
   };
 
-  return colorMapping[commonName.toLowerCase()] || "blue";
+  const color = colorMapping[familyName.toLowerCase()]
+  console.log(color)
+  return color;
+}
+
+// Function to create a custom SVG marker icon with color
+function createCustomSVGIcon(markerColor) {
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="50" height="50">
+      <circle cx="50" cy="50" r="40" fill="${markerColor}" stroke="white" stroke-width="5"/>
+    </svg>
+  `;
+
+  const encodedSvg = encodeURIComponent(svg); // Encode the SVG string to use in the URL
+
+  return {
+    url: `data:image/svg+xml;charset=UTF-8,${encodedSvg}`,  // Use the encoded SVG URL
+    scaledSize: new google.maps.Size(25, 25),  // Size of the marker
+    anchor: new google.maps.Point(25, 25),     // Center the marker
+  };
 }

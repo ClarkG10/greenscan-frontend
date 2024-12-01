@@ -67,32 +67,49 @@ async function getUserData(url, keyword = "") {
   
           users.data.forEach(user => {
               userHtml += `<tr>
-                  <td class="fw-bold">
-                      <img src="${user.image_path != null ? `${backendURL}/storage/${user.image_path}` : `src/imgs/logo1.png`}" width="25px" class="rounded-circle me-2" />${user.fullname}
-                  </td>
-                  <td>${user.email}</td>
-                  <td>${user.phone_num}</td>
-                  <td>${user.office_location}</td>
-                  <td>${user.department}</td>
-                  <td>${user.office_hours}</td>
-                  <td><span class="fw-bold" style="color: #4f7942">${user.role}</span></td>
-                  ${profile.role === 'Admin' || 'admin' ? `<td>
-                      <div class="d-flex">
-                          <button class="me-2 btn text-white" style="background-color: #4f7942" data-bs-toggle="offcanvas" data-bs-target="#updateBackdrop_${user.id}" aria-controls="updateBackdrop_${user.id}">Update</button>  
-                          <button type="button" class="btn bg-secondary-subtle" id="deleteUserButton" data-id="${user.id}">
-                              <img src="src/icon/trash.png" alt="" width="13px" id="deleteUserButton"/>
-                          </button>
-                      </div>
-                      <div>${updateFormHTML(user)}</div>
-                  </td>` : ``}
-              </tr>
-            
-              `;
+              <td class="fw-bold">
+                <img 
+                  src="${user.image_path ? `${backendURL}/storage/${user.image_path}` : 'src/imgs/logo1.png'}" 
+                  width="25px" 
+                  class="rounded-circle me-2" 
+                  alt="User Profile" 
+                />
+                ${user.fullname}
+              </td>
+              <td>${user.email}</td>
+              <td>${user.phone_num}</td>
+              <td>${user.office_location}</td>
+              <td>${user.department}</td>
+              <td>${user.office_hours}</td>
+              <td><span class="fw-bold text-success">${user.role}</span></td>
+              ${profile.role === 'Admin' ? `
+                <td>
+                  <div class="d-flex">
+                    <button 
+                      class="btn text-white me-2" 
+                      style="background-color: #4f7942" 
+                      data-bs-toggle="offcanvas" 
+                      data-bs-target="#updateBackdrop_${user.id}" 
+                      aria-controls="updateBackdrop_${user.id}">
+                      Update
+                    </button>
+                    <button 
+                      type="button" 
+                      class="btn btn-light text-danger" 
+                      id="deleteUserButton" 
+                      data-id="${user.id}">
+                      <img src="src/icon/trash.png" alt="Delete" width="13px" />
+                    </button>
+                  </div>
+                  ${updateFormHTML(user)}
+                </td>` : ''}
+            </tr>
+            `;
           });
   
           document.getElementById("getUsers").innerHTML = userHtml;
 
-        if (profile.role == 'Admin' || 'admin') {
+        if (profile.role == 'Admin') {
             document.getElementById("createUserButton").innerHTML = `<button
                     class="btn text-white"
                     style="background-color: #4f7942"
@@ -181,8 +198,8 @@ async function updateUserData(id) {
   userForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    document.querySelector("updateButton_" + id).disabled = true;
-
+    const updateButton = document.querySelectorAll("updateButton_" + id)
+    updateButton.disabled = true;
     const formData = new FormData(userForm);
     formData.append("_method", "PUT");
 
@@ -203,14 +220,14 @@ async function updateUserData(id) {
             userForm.reset(); // Reset form after successful submission
             await getUserData(); // Refresh the user list
         } else {
-            console.error("Update failed:", userData.message);
+            alert(`Update failed: ${userData.message}`);
         }
     } catch (error) {
         console.error("Error updating user:", error);
     }
 
-    document.querySelector("updateButton_" + id).disabled = false;
-    document.querySelector("updateButton_" + id).innerHTML = `Update User`;
+    updateButton.disabled = false;
+    updateButton.innerHTML = `Update User`;
 });
 }
 
@@ -230,7 +247,7 @@ async function deleteUserData(id) {
       if (userResponse.ok) {
           await getUserData();
       } else {
-          console.error("Delete failed:", userData.message);
+          alert(`Delete failed: ` );
       }
   }
   }
@@ -283,8 +300,8 @@ async function deleteUserData(id) {
                               <!-- Role (Dropdown) -->
                               <div class="form-floating mb-3">
                                   <select class="form-select" id="role" name="role" >
-                                      <option value="User" ${user.role === "User" || "user" ? `selected` : `` }>User</option>
-                                      <option value="Admin" ${user.role === "Admin" || "admin" ? `selected` : `` }>Admin</option>
+                                      <option value="User" ${user.role === "User" ? `selected` : `` }>User</option>
+                                      <option value="Admin" ${user.role === "Admin" ? `selected` : `` }>Admin</option>
                                   </select>
                                   <label for="role">Role</label>
                               </div>

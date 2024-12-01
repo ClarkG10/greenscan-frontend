@@ -7,6 +7,8 @@ async function logout(){
     const btn_logout = document.getElementById("btn_logout");
 
     btn_logout.onclick = async () => {
+
+    btn_logout.disabled = true;
         
     const logoutResponse = await fetch(backendURL + "/api/logout", { 
         headers: {
@@ -23,8 +25,9 @@ async function logout(){
         alert(json.message);
         }
     }
-}
 
+    btn_logout.disabled = false;
+}
 // Function to format the date
 function formatDate(dateString) {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };

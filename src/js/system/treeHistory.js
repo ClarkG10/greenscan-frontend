@@ -50,24 +50,35 @@ async function getTreeHistory(url, keyword = "") {
 
             const newDataDisplay = `
             <ul style="list-style-type: none; padding-left: 0;">
-                ${Object.entries(newData).map(([key, value]) => {
-                    // Check if the key should be excluded
-                    if (key !== 'tree_id' && key !== 'user_id' && key !== 'created_at' && key !== 'updated_at') {
-                        const oldValue = oldData[key];
-                        const style = oldValue !== value ? 'color: green;' : '';
-                        return ` <li style="${style}"><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value || "N/A"}</li>` ;
-                    }
-                    return ''; // Return an empty string if the key is excluded
-                }).join('')}
-            </ul>
-        `;
+                ${
+                    (newData || oldData) 
+                        ? Object.entries(newData || oldData)?.map(([key, value]) => {
+                            // Exclude specific keys
+                            if (!['tree_id', 'user_id', 'created_at', 'updated_at'].includes(key)) {
+                                const oldValue = oldData ? oldData[key] : undefined; // Handle `oldData` safely
+                                let style = '';
+                                
+                                // Set the color based on whether the value is from oldData or newData
+                                if (newData && oldValue !== value) {
+                                    style = 'color: green;'; // Highlight newData changes in green
+                                } else if (!newData && oldValue === value) {
+                                    style = 'color: red;'; // Highlight oldData in red
+                                }
+        
+                                return `<li style="${style}"><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${value || "N/A"}</li>`;
+                            }
+                            return ''; // Skip excluded keys
+                        }).join('')
+                        : '<li>No data available</li>' // Fallback if neither `newData` nor `oldData` exist
+                }
+            </ul>`;
         
             historyHTML += `
                 <tr>
                     <td class="fw-bold">${history.tree_id}</td>
                     <td>${userData.fullname}</td>
                     <td> <span class="p-2 bg-secondary-subtle rounded-3">${userData.role}</span></td>
-                    <td class="fw-bold ${history.action === "created" ? `text-primary` : history.action === "updated location" ? `text-success` : `text-success`}">${history.action}</td>
+                    <td class="${history.action === "created" ? `text-primary` : history.action === "updated" ? `text-success` : `text-danger`}">${history.action}</td>
                     <td>${formattedDate}</td>
                     <td><div class="accordion accordion-flush" id="accordionExample_${index}">
                           <div class="accordion-item">

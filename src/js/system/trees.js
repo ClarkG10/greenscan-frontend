@@ -39,7 +39,9 @@ treeForm.addEventListener("submit", async (e) => {
     const biomass = calculateBiomass(DBH);
     const carbonStored = calculateCarbonStored(biomass);
 
-    console.log(circumferenceAtBase, DAB)
+    const imagePath = treeForm.image_path;
+
+    console.log(imagePath);
     // Create FormData from form and append calculated values
     const formData = new FormData(treeForm);
     formData.append("dbh", DBH);
@@ -133,8 +135,7 @@ async function getTreeData(url, keyword = "") {
                       <td>${tree.scientific_name} John</td>
                       <td>${tree.family_name}</td>
                       <td>${tree.economic_use}</td>
-                      <td>${tree.dbh}cm</td>
-                      <td>${tree.dab}cm</td>
+                      <td>${tree.dbh}cm / ${tree.dab}cm</td>
                       <td>${tree.t_height}m</td>
                       <td>${tree.biomass}kg</td>
                       <td>${tree.carbon_stored}kg</td>
@@ -153,10 +154,8 @@ async function getTreeData(url, keyword = "") {
                           ><button class="btn bg-secondary-subtle" id="deletetreeButton" data-id="${tree.tree_id}">
                             <img src="src/icon/trash.png" alt="" width="14px" data-id="${tree.tree_id}" id="deletetreeButton" />
                           </button>
-
                           ${displayTreeDataModal(tree)}
                         </div>
-
                         <!-- Modal -->
                       </td>
                     </tr>`
@@ -203,7 +202,7 @@ async function getTreeData(url, keyword = "") {
         console.log(treeData.message);
     }
 
-    loader.innerHTML = ""; // Remove loader when data is fetched successfully
+    loader.innerHTML = ""; 
 }
 
 const search_form = document.getElementById("search_form");
@@ -359,7 +358,8 @@ const pageAction = async (e) => {
             <div class="d-flex justify-content-end align-items-end">
               <button
                 type="button"
-                class="btn bg-secondary-subtle me-3 mt-2"
+                class="btn me-3 mt-2 text-white"
+                style="border: 2px solid #4F7942; background-color: #4F7942"
                 data-bs-target="#updateTreeModal_${tree.tree_id}"
                 data-bs-toggle="modal"
               >
@@ -404,10 +404,7 @@ const pageAction = async (e) => {
                   ><br />${tree.economic_use}
                 </div>
                 <div class="col-6">
-                  <span class="opacity-50 fw-bold">DHB:</span><br />${tree.dbh}cm
-                </div>
-                <div class="col-6">
-                  <span class="opacity-50 fw-bold">DAB:</span><br />${tree.dab}cm
+                  <span class="opacity-50 fw-bold">DHB/DAB:</span><br />${tree.dbh}cm/${tree.dab}cm
                 </div>
                 <div class="col-6">
                   <span class="opacity-50 fw-bold">Tree Height:</span
@@ -425,7 +422,12 @@ const pageAction = async (e) => {
                   <span class="opacity-50 fw-bold">Health:</span 
                   ><br /><span class="bg-secondary-subtle p-2 fw-bold rounded-3">${tree.tree_health}</span>
                 </div>
+                  <div class="col-6">
+                  <span class="opacity-50 fw-bold">Price:</span 
+                  ><br />${tree.price}
+                </div>
               </div>
+              <div class="d-flex justify-content-center mt-2 mb-3 "><img class="rounded-3 border border-1" src="${tree.image_path ? `${backendURL}/storage/${tree.image_path}`: `src/imgs/No image.png`}" width="400px"></div>
             </div>
           </div>
         </div>
@@ -640,6 +642,18 @@ const pageAction = async (e) => {
                       value="${tree.price}"
                     />
                     <label for="price">Price</label>
+                  </div>
+                   <!-- Image -->
+                  <div class="form-floating mb-3">
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="image_path"
+                      placeholder="Tree image"
+                      name="image_path"
+                      accept=".png, .jpg, .jpeg"
+                    />
+                    <label for="image_path">Tree image (optional)</label>
                   </div>
                 
                   <!-- Submit Button -->

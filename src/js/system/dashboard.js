@@ -2,142 +2,150 @@ import { logout, backendURL, formatDate } from "../utils/utils.js";
 
 logout();
 const loader = document.getElementById('loader');
-loader.innerHTML = `<div class="loader-overlay"><div class="loader"></div></div>`
-
+loader.innerHTML = `<div class="loader-overlay"><div class="loader"></div></div>`;
 
 async function fetchTreeData() {
   const getTotalTrees = document.getElementById('getTotalTrees');
   const recentlyAddedTrees = document.getElementById('recentlyAddedTrees');
   const recentActivity = document.getElementById('recentActivity');
+
   try {
-    const treeResponse = await fetch(backendURL + "/api/trees", {
-      headers: {
-        Accept: "application/json",
-      },
-    });
+    // Fetch API calls
+    const [treeResponse, historyResponse, userResponse] = await Promise.all([
+      fetch(`${backendURL}/api/trees`, { headers: { Accept: "application/json" } }),
+      fetch(`${backendURL}/api/history`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }),
+      fetch(`${backendURL}/api/users`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }),
+    ]);
 
-    const historyResponse = await fetch(backendURL + "/api/history", {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-
-    const userResponse = await fetch(backendURL + '/api/users',{
-      headers:{
-          Accept: 'application/json',
-          Authorization: 'Bearer '+ localStorage.getItem('token'),
-      },
-  });
-  
-
-
+    // Handle HTTP errors
     if (!treeResponse.ok || !historyResponse.ok || !userResponse.ok) {
-      throw new Error(`HTTP error! Status: ${treeResponse.status || historyResponse.status || userResponse.status}`);
+      throw new Error(
+        `HTTP error! Status: ${treeResponse.status || historyResponse.status || userResponse.status}`
+      );
     }
 
     const trees = await treeResponse.json();
     const history = await historyResponse.json();
     const usersData = await userResponse.json();
 
-    getTotalTrees.innerHTML = `<h5 class="card-text fw-bold">${trees.length}</h5>`
-    
-    trees.reverse().slice(0, 7).forEach(tree => {
-      recentlyAddedTrees.innerHTML += `
-        <tr>
-          <td>${tree.tree_id}</td>
-          <td>${tree.common_name}</td>
-          <td>${tree.scientific_name}</td>
-          <td>${tree.family_name}</td>
-          <td>${formatDate(tree.created_at)}</td>
-        </tr>
-      `;
-    });
+    // Update total trees
+    getTotalTrees.innerHTML = `<h5 class="card-text fw-bold">${trees.length}</h5>`;
 
-    history.data.slice(0, 7).forEach(history => {
-      const userData = usersData.data.find(user => user?.id === history?.user_id);
-      const treeData = trees.find(tree => tree?.tree_id === history?.tree_id);
+    // Render recently added trees
+    const recentTreesHTML = trees
+      .reverse()
+      .slice(0, 7)
+      .map(
+        (tree) => `
+          <tr>
+            <td>${tree.tree_id}</td>
+            <td>${tree.common_name}</td>
+            <td>${tree.scientific_name}</td>
+            <td>${tree.family_name}</td>
+            <td>${formatDate(tree.created_at)}</td>
+          </tr>`
+      )
+      .join("");
+    recentlyAddedTrees.innerHTML = recentTreesHTML;
 
-      recentActivity.innerHTML += `     
-        <tr>
-          <td class="fw-bold">${history.tree_id}</td>
-          <td>${treeData.scientific_name}</td>
-          <td class="fw-bold ${history.action === "created" ? `text-primary` : history.action === "updated location" ? `text-success` : `text-success`}">${history.action}</td>
-          <td>${userData.fullname}</td>
-          <td>4${formatDate(history.created_at)}</td>
-        </tr>`
+    // Render recent activity
+    const recentActivityHTML = history.data.slice(0, 7).map((entry) => {
+      const oldData = entry.old_data ? JSON.parse(entry.old_data) : {};
 
-        console.log(recentActivity)
-    });
+        const userData = usersData.data.find((user) => user?.id === entry?.user_id);
+        const treeData = trees.find((tree) => tree?.tree_id === entry?.tree_id);
+        const actionClass =
+          entry.action === "created"
+            ? "text-primary"
+            : entry.action === "updated"
+            ? "text-success"
+            : "text-danger";
 
-    const treeCounts = {};
-    trees.forEach(tree => {
-      const scientificName = tree.scientific_name;
-      if (treeCounts[scientificName]) {
-        treeCounts[scientificName]++;
-      } else {
-        treeCounts[scientificName] = 1;
-      }
-    });
+        return `
+          <tr>
+            <td class="fw-bold">${entry.tree_id}</td>
+            <td>${treeData?.scientific_name || oldData.scientific_name}</td>
+            <td class="fw-bold ${actionClass}">${entry.action}</td>
+            <td>${userData?.fullname || "Unknown"}</td>
+            <td>${formatDate(entry.created_at)}</td>
+          </tr>`;
+      })
+      .join("");
+    recentActivity.innerHTML = recentActivityHTML;
 
-    const types = Object.keys(treeCounts);
-    const percentages = Object.values(treeCounts);
+    // Count trees by scientific name
+    const treeCounts = trees.reduce((counts, tree) => {
+      counts[tree.family_name] = (counts[tree.family_name] || 0) + 1;
+      return counts;
+    }, {});
 
     return {
-      types,
-      percentages,
+      types: Object.keys(treeCounts),
+      percentages: Object.values(treeCounts),
     };
   } catch (error) {
     console.error("Failed to fetch tree data:", error);
+
+    // Provide user feedback
+    loader.innerHTML = `<p class="error-message">Failed to load data. Please try again later.</p>`;
     return {
       types: [],
-      percentages: []
+      percentages: [],
     };
   }
 }
 
-// Function to generate random shades of green
+// Generate random shades of green
 function generateRandomGreenShades(count) {
-  const shades = [];
-  for (let i = 0; i < count; i++) {
-    const greenShade = `hsl(${Math.floor(Math.random() * 40 + 80)}, ${Math.floor(Math.random() * 40 + 60)}%, ${Math.floor(Math.random() * 30 + 30)}%)`;
-    shades.push(greenShade);
-  }
-  return shades;
+  return Array.from({ length: count }, () =>
+    `hsl(${Math.random() * 40 + 80}, ${Math.random() * 40 + 60}%, ${Math.random() * 30 + 30}%)`
+  );
 }
 
-// Function to render the pie chart
+// Render the pie chart
 async function renderTreeChart() {
   const data = await fetchTreeData();
 
-  const ctx = document.getElementById('treeChart').getContext('2d');
+  if (data.types.length === 0) return; // Stop if no data
+
+  const ctx = document.getElementById("treeChart").getContext("2d");
 
   new Chart(ctx, {
-    type: 'pie',
+    type: "pie",
     data: {
       labels: data.types,
       datasets: [
         {
           data: data.percentages,
           backgroundColor: generateRandomGreenShades(data.types.length),
-        }
-      ]
+        },
+      ],
     },
     options: {
       responsive: true,
       plugins: {
         legend: {
-          position: 'top',
+          position: "top",
         },
         tooltip: {
-          enabled: true
-        }
-      }
-    }
+          enabled: true,
+        },
+      },
+    },
   });
 
-  loader.innerHTML = ""; // Remove loader when data is fetched successfully
-
+  // Remove loader
+  loader.innerHTML = "";
 }
 
 // Call the function to render the chart

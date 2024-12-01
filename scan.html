@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Code Scanner</title>
     <link rel="stylesheet" href="src/css/styles.css" />
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link
@@ -10,17 +11,59 @@
       rel="stylesheet"
     />
     <script type="module" src="assets/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="src/js/system/dashboard.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <title>Dashboard</title>
+    <script type="module" src="src/js/system/scan.js" defer></script>
+    <script
+      src="https://unpkg.com/html5-qrcode"
+      type="text/javascript"
+    ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB-ZLIPWC70d4HqdODaS1zopmod2YXUd94&map_ids=bbc70c6f1eb4afd9"></script>
     <style>
+      #map {
+        width: 100%;
+        height: 400px; /* Adjust as needed */
+      }
+
       .hidden-logo {
         display: none !important;
       }
-      .card {
-        border-radius: 10px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      /* Default fallback for smaller screens */
+      #reader {
+        margin: 50px auto;
+        border: 3px solid #4f7942 !important;
+      }
+
+      /* QR Code Reader Styles */
+      @media (min-width: 768px) {
+        .hideBottomNav {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 767px) {
+        .hideNav {
+          display: none !important;
+        }
+      }
+
+      @media (min-width: 430px) {
+        #reader {
+          width: 480px !important;
+        }
+      }
+      @media (min-width: 412px) {
+        #reader {
+          width: 380px !important;
+        }
+      }
+      @media (min-width: 390px) {
+        #reader {
+          width: 360px !important;
+        }
+      }
+      @media (min-width: 350px) {
+        #reader {
+          width: 340px !important;
+        }
       }
     </style>
   </head>
@@ -87,10 +130,7 @@
           <img src="src/imgs/letterlogo4.png" alt="" width="150px" />
         </div>
       </span>
-      <a
-        class="mt-3 focus fw-bold d-flex align-items-center"
-        href="dashboard.html"
-      >
+      <a class="mt-3 opacity d-flex align-items-center" href="dashboard.html">
         <img
           src="src/icon/home (2).png"
           class="me-2"
@@ -107,7 +147,7 @@
         <img src="src/icon/file (1).png" class="me-2" width="20px" />
         History
       </a>
-      <a class="opacity d-flex align-items-center" href="scan.html">
+      <a class="focus d-flex align-items-center" href="scan.html">
         <img src="src/icon/qr-scan (1).png" class="me-2" width="20px" />
         Scan
       </a>
@@ -117,95 +157,81 @@
       </a>
     </div>
 
-    <!-- Main content -->
-    <div id="content" class="content">
-      <div class="container-fluid">
-        <h4 class="fw-bold">Dashboard</h4>
-        <span>Welcome Back, Clark Raven Dalauta</span>
-        <div class="row mt-3 d-flex">
-          <!-- Card 1: Total Trees -->
-          <div class="col-lg-4">
-            <div class="card p-3">
-              <p class="card-title fw-bold opacity-50">Total Trees</p>
-              <div id="getTotalTrees"></div>
-            </div>
+    <!-- QR Code Scanner -->
+    <div class="container">
+      <div class="fw-bold text-center mt-4">
+        <h4 class="fw-bold">QR Code Scanner</h4>
+        <div id="reader" style="margin-top: 0"></div>
+      </div>
+    </div>
 
-            <!-- Card for Pie Chart -->
-            <div class="card p-3" style="height: 445px !important">
-              <div>
-                <p class="card-title fw-bold opacity-50">Tree Pie Chart</p>
-                <canvas id="treeChart"></canvas>
-              </div>
-            </div>
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      id="treeDataButton"
+      class="btn btn-primary invisible"
+      data-bs-toggle="modal"
+      data-bs-target="#treeDataModal"
+    >
+      Launch Tree Data
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="treeDataModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog mt-2">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              Tree Details
+            </h1>
           </div>
+          <div class="modal-body" id="tree-details"></div>
+          <div>
+            <hr />
+            <!-- "Retake" or "Scan Again" Button -->
 
-          <!-- Card 2: Recently Added Trees -->
-          <div class="col-lg-4">
-            <div class="mb-1">
-              <p class="card-title fw-bold opacity-50">Recently Added Trees</p>
-            </div>
-
-            <div
-              class="card p-3"
-              style="
-                height: 525px !important;
-                font-size: 14px !important;
-                overflow-y: auto;
-              "
-            >
-              <div>
-                <table
-                  class="table table-hover table-responsive"
-                  style="width: 100%"
-                >
-                  <thead>
-                    <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">Common Name</th>
-                      <th scope="col">Scientific Name</th>
-                      <th scope="col">Family Name</th>
-                      <th scope="col">Added on</th>
-                    </tr>
-                  </thead>
-                  <tbody id="recentlyAddedTrees"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="mb-1">
-              <p class="card-title fw-bold opacity-50">Recent Activity</p>
-            </div>
-            <div
-              class="card p-3"
-              style="
-                height: 525px !important;
-                font-size: 14px !important;
-                overflow-y: auto;
-              "
-            >
-              <div>
-                <table
-                  class="table table-hover table-responsive"
-                  style="width: 100%"
-                >
-                  <thead>
-                    <tr>
-                      <th scope="col">ID</th>
-                      <th scope="col">Scientific Name</th>
-                      <th scope="col">Action</th>
-                      <th scope="col">User</th>
-                      <th scope="col">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody id="recentActivity"></tbody>
-                </table>
-              </div>
+            <div class="d-grid">
+              <button
+                type="submit"
+                class="btn text-white mx-3 mb-3"
+                style="background-color: #4f7942"
+                id="retakeButton"
+              >
+                Scan Again
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Toast for success/failure -->
+    <div
+      class="toast-container position-fixed bottom-0 end-0 p-3"
+      style="z-index: 11"
+    >
+      <div
+        id="liveToast"
+        class="toast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div id="toast-body" class="toast-body text-white"></div>
+      </div>
+    </div>
+    <div
+      id="toast-container"
+      style="position: fixed; top: 1rem; right: 1rem; z-index: 1050"
+    ></div>
 
     <script>
       // Set initial styles

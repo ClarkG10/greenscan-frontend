@@ -28,7 +28,7 @@
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm">
-      <div class="container">
+      <div class="container-fluid">
         <button
           class="open-btn bg-white rounded-circle text-black"
           id="sidebarToggle"
@@ -103,6 +103,10 @@
         <img src="src/icon/file (1).png" class="me-2" width="20px" />
         History
       </a>
+      <a class="opacity d-flex align-items-center" href="scan.html">
+        <img src="src/icon/qr-scan (1).png" class="me-2" width="20px" />
+        Scan
+      </a>
       <a class="opacity d-flex align-items-center" href="user.html">
         <img src="src/icon/users (3).png" class="me-2" width="20px" />
         Users
@@ -111,7 +115,7 @@
 
     <!-- Main content -->
     <div id="content" class="content">
-      <div class="container">
+      <div class="container-fluid">
         <h4 class="fw-bold">Tree Management</h4>
         <span>Manage Tree Datas</span>
 
@@ -176,10 +180,9 @@
                       <th scope="col">Scientific Name</th>
                       <th scope="col">Family Name</th>
                       <th scope="col">Economic Use</th>
-                      <th scope="col">DBH</th>
-                      <th scope="col">DAB</th>
+                      <th scope="col">DBH/DAB</th>
                       <th scope="col">Total Height</th>
-                      <th scope="col">Biomass</th>
+                      <th scope="col">Above Ground Biomass</th>
                       <th scope="col">Carbon Stored</th>
                       <th scope="col">Health</th>
                       <th scope="col">Actions</th>
@@ -387,6 +390,19 @@
                 name="price"
               />
               <label for="price">Price</label>
+            </div>
+
+            <!-- Image -->
+            <div class="form-floating mb-3">
+              <input
+                type="file"
+                class="form-control"
+                id="image_path"
+                placeholder="Tree image"
+                name="image_path"
+                accept=".png, .jpg, .jpeg"
+              />
+              <label for="image_path">Tree image (optional)</label>
             </div>
 
             <!-- Submit Button -->
